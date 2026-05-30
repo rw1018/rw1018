@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ronald Wichhart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0b0a09;
+      --surface: rgba(255, 255, 255, 0.035);
+      --surface-hover: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(185, 150, 110, 0.5);
+      --text: #f0ece6;
+      --text-muted: rgba(240, 236, 230, 0.45);
+      --accent: #b8966e;
+      --accent-glow: rgba(184, 150, 110, 0.15);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle noise grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Radial warm glow from center */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(184, 150, 110, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.1s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar-wrap img {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      display: block;
+      object-fit: cover;
+      border: 2px solid rgba(184, 150, 110, 0.35);
+      box-shadow: 0 0 0 4px rgba(184, 150, 110, 0.08);
+    }
+
+    .avatar-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    /* Divider */
+    .divider {
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.35s;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 36px;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.45s;
+    }
+
+    /* Link list */
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--text);
+      transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease;
+      cursor: pointer;
+
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .link-item:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      box-shadow: 0 0 24px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .link-item:active {
+      transform: translateY(0px);
+    }
+
+    .link-item.primary {
+      border-color: rgba(184, 150, 110, 0.25);
+      background: rgba(184, 150, 110, 0.07);
+    }
+
+    .link-item.primary:hover {
+      border-color: rgba(184, 150, 110, 0.6);
+      box-shadow: 0 0 32px rgba(184, 150, 110, 0.18);
+    }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .link-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .link-item:hover .link-icon {
+      opacity: 1;
+    }
+
+    .link-label {
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.025em;
+    }
+
+    .link-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: 0.03em;
+    }
+
+    .link-arrow {
+      opacity: 0.3;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .link-item:hover .link-arrow {
+      opacity: 0.7;
+      transform: translateX(3px);
+    }
+
+    /* Section label */
+    .section-label {
+      width: 100%;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 28px;
+      margin-bottom: 10px;
+      padding-left: 2px;
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      font-size: 0.65rem;
+      color: rgba(240, 236, 230, 0.2);
+      letter-spacing: 0.08em;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Staggered link reveals */
+    .link-item:nth-child(1) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.55s; }
+    .link-item:nth-child(2) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.65s; }
+    .link-item:nth-child(3) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.75s; }
+    .link-item:nth-child(4) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.85s; }
+    .link-item:nth-child(5) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.92s; }
+    .link-item:nth-child(6) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.99s; }
+
+    .section-label:nth-of-type(1) { animation-delay: 0.55s; }
+    .section-label:nth-of-type(2) { animation-delay: 0.82s; }
+    .footer { animation-delay: 1.1s; }
+    .divider { animation-delay: 0.35s; }
+
+    @media (max-width: 480px) {
+      .logo-wrap img { width: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="avatar-wrap">
+      <img
+        src="https://avatars.githubusercontent.com/u/7032448?v=4"
+        alt="Ronald Wichhart"
+      />
+      <span class="avatar-name">Ronald Wichhart</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="tagline">builder · founder · maker of things</p>
+
+    <span class="section-label">Find me</span>
+
+    <div class="links" id="primary-links">
+
+      <a href="https://receiptsai.com" target="_blank" rel="noopener noreferrer" class="link-item primary">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="9" y1="16" x2="13" y2="16"/>
+          </svg>
+          <div>
+            <div class="link-label">ReceiptsAI</div>
+            <div class="link-sub">receiptsai.com</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+      <a href="https://x.com/ronaldwichhart" target="_blank" rel="noopener noreferrer" class="link-item">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          <div>
+            <div class="link-label">@ronaldwichhart</div>
+            <div class="link-sub">x.com</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+      <a href="https://ronaldwichhart.com" target="_blank" rel="noopener noreferrer" class="link-item">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+          </svg>
+          <div>
+            <div class="link-label">Personal Site</div>
+            <div class="link-sub">ronaldwichhart.com</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+    </div>
+
+    <span class="section-label">Other projects</span>
+
+    <div class="links" id="other-links">
+
+      <a href="https://dividends.ph" target="_blank" rel="noopener noreferrer" class="link-item">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+          <div>
+            <div class="link-label">Dividends PH</div>
+            <div class="link-sub">dividends.ph</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+      <a href="https://thephilippinesbest.com/" target="_blank" rel="noopener noreferrer" class="link-item">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <div>
+            <div class="link-label">The Philippines Best</div>
+            <div class="link-sub">thephilippinesbest.com</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+      <a href="https://whatisafavicon.com/" target="_blank" rel="noopener noreferrer" class="link-item">
+        <div class="link-left">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+          </svg>
+          <div>
+            <div class="link-label">What Is A Favicon</div>
+            <div class="link-sub">whatisafavicon.com</div>
+          </div>
+        </div>
+        <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+    </div>
+
+    <p class="footer">Ronald Wichhart &nbsp;·&nbsp; 2026</p>
+
+  </div>
+</body>
+</html>
