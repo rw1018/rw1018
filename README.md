@@ -1,4 +1,4 @@
-<img src="https://receiptsai-marketing.sfo3.cdn.digitaloceanspaces.com/logo/ReceiptsAI.svg" alt="ReceiptsAI Logo" width="400" />
+<img src="https://receiptsai-marketing.sfo3.cdn.digitaloceanspaces.com/logo/ReceiptsAI-white.svg" alt="ReceiptsAI Logo" width="320" />
 
 Welcome! Here are the best ways to find me:
 
