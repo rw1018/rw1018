@@ -5,3 +5,9 @@ Welcome! Here are the best ways to find me:
 - 🧾 [receiptsai.com](https://receiptsai.com)
 - 𝕏 [x.com/ronaldwichhart](https://x.com/ronaldwichhart)
 - 📄 [ronaldwichhart.com](https://ronaldwichhart.com)
+
+
+Other projects:
+- 💸 [dividends.ph](https://dividends.ph)
+- 🇵🇭 [thephilippinesbest.com](https://thephilippinesbest.com/)
+- ✌️ [whatisafavicon.com](https://whatisafavicon.com/)
